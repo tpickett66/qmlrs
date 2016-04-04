@@ -1,24 +1,32 @@
-# qmlrs needs the Ubuntu 14.04 trusty beta image to get a recent Qt5 (trusty ships with Qt 5.2)
-dist: trusty
-# the trusty beta is only available as sudo
-sudo: required
-
 language: rust
-rust:
-  - stable
-  - beta
-  - nightly
+
+# qmlrs needs the Ubuntu 14.04 trusty beta image to get a recent Qt5 (trusty ships with Qt 5.2)
+# the trusty beta is only available as sudo
 matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      rust: stable
+    - os: linux
+      dist: trusty
+      sudo: required
+      rust: beta
+    - os: linux
+      dist: trusty
+      sudo: required
+      rust: nightly
+    - os: osx
+      rust: stable
+    - os: osx
+      rust: beta
+    - os: osx
+      rust: nightly
   allow_failures:
     - rust: nightly
 
 install:
-  - sudo apt-get update -qq
-  # requirements of qmlrs
-  - sudo apt-get install -qq qtbase5-dev libqt5gui5 libqt5quick5 libqt5qml5 qtdeclarative5-dev qtdeclarative5-qtquick2-plugin cmake
-  # requirements of travis-cargo
-  - sudo apt-get install -qq libcurl4-openssl-dev libelf-dev libdw-dev binutils-dev
-
+  - ./travis/install.sh
 
 # travis-cargo is a wrapper around cargo we use for code coverage generation
 # https://github.com/huonw/travis-cargo
